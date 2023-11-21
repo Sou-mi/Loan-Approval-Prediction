@@ -14,27 +14,34 @@ spark = SparkSession.builder.appName("ClassificationwithSpark").getOrCreate()
 model = RandomForestClassificationModel.load("random_forest")
 
 
-def diabetes_prediction(input_data):
+def loan_prediction(input_data):
     data = [
         (
-            int(input_data[0]),
+            float(input_data[0]),
             float(input_data[1]),
             float(input_data[2]),
             float(input_data[3]),
-            float(input_data[4]),
+            int(input_data[4]),
             float(input_data[5]),
-            float(input_data[6])
+            float(input_data[6]),
+            float(input_data[7]),
+            float(input_data[8]),
+            float(input_data[9]),
+            
         ),
     ]
     schema = StructType(
-        [
-            StructField("ApplicantIncome", IntegerType(), True),
-            StructField("LoanAmount", FloatType(), True),
+        [   
             StructField("Gender_", FloatType(), True),
             StructField("Dependents_", FloatType(), True),
-            StructField("Married_", FloatType(), True),
             StructField("Education_", FloatType(), True),
-            StructField("Self_Employed_", FloatType(), True)
+            StructField("Self_Employed_", FloatType(), True),
+            StructField("ApplicantIncome", IntegerType(), True),
+            StructField("LoanAmount", FloatType(), True),
+            StructField("Credit_History", FloatType(), True),
+            StructField("Property_Area_", FloatType(), True),
+            StructField("Total_Income", FloatType(), True),
+            StructField("Loan_Status_", FloatType(), True),    
         ]
     )
 
@@ -43,13 +50,16 @@ def diabetes_prediction(input_data):
     # Assuming "Outcome" is the label column and "features" is the feature vector
     vector_assembler = VectorAssembler(
         inputCols=[
-            "ApplicantIncome",
-            "LoanAmount",
             "Gender_",
             "Dependents_",
-            "Married_",
             "Education_",
-            "Self_Employed_"
+            "Self_Employed_",
+            "ApplicantIncome",
+            "LoanAmount",
+            "Credit_History",
+            "Property_Area_",
+            "Total_Income",
+            "Loan_Status_"
         ],
         outputCol="features",
     )
@@ -72,13 +82,18 @@ def main():
 
     # getting the input data from the user
 
-    ApplicantIncome = st.text_input("Applicant Income")
-    LoanAmount = st.text_input("Loan Amount")
     Gender = st.text_input("Gender")
     Dependents = st.text_input("Dependents")
-    Married = st.text_input("Marital Status")
     Education = st.text_input("Education")
     Self_Employed = st.text_input("Self_Employed")
+    ApplicantIncome = st.text_input("Applicant Income")
+    LoanAmount = st.text_input("Loan Amount")
+    Credit_History = st.text_input("Credit_History")
+    Property_Area = st.text_input("Property_Area_")
+    Total_Income = st.text_input("Total_Income")
+    Loan_Status = st.text_input("Loan_Status_")
+    
+    
 
     # code for Prediction
     diagnosis = ""
@@ -86,15 +101,19 @@ def main():
     # creating a button for Prediction
 
     if st.button("Loan Prediction Result"):
-        diagnosis = diabetes_prediction(
+        diagnosis = loan_prediction(
             [
-                ApplicantIncome,
-                LoanAmount,
                 Gender,
                 Dependents,
-                Married,
                 Education,
-                Self_Employed
+                Self_Employed,
+                LoanAmount,
+                ApplicantIncome,
+                Credit_History,
+                Property_Area,
+                Total_Income,
+                Loan_Status
+                
             ]
         )
 
